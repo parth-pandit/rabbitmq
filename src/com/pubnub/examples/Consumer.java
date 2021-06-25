@@ -19,15 +19,25 @@ import com.rabbitmq.client.QueueingConsumer;
 public class Consumer {
 
 	//messages subscribed from PubNub by producerServer for Consumer to consumePubNub
-	private static final String TASK_QUEUE_NAME = "task_queue_inbound_durable";
+	private static final String TASK_QUEUE_NAME = "to-alerts";
+  private static final String RMQ_HOST = "54.152.57.57";
+  private static final int RMQ_PORT = 5672;
+  private static final String RMQ_USER = "user";
+  private static final String RMQ_PASWD = "Abcd@1234";
     
     public static void main(String[] argv) throws Exception {
     	
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        factory.setUsername(RMQ_USER);
+        factory.setPassword(RMQ_PASWD);
+        factory.setVirtualHost("/");
+        factory.setHost(RMQ_HOST);
+        factory.setPort(RMQ_PORT);
 
+        Connection connection = factory.newConnection();
+        System.out.println("created connection...");
+        Channel channel = connection.createChannel();
+        System.out.println("created channel...");
         //configure message queues as durable
         boolean durable = true;
 
@@ -49,6 +59,7 @@ public class Consumer {
           String message = new String(delivery.getBody());
           
           System.out.println(" [x] Consumer : received '" + message + "'");
+          System.out.println("\n\n");
           doWork(message);
 
           channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
