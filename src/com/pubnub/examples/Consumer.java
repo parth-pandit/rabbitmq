@@ -19,14 +19,38 @@ import com.rabbitmq.client.QueueingConsumer;
 public class Consumer {
 
 	//messages subscribed from PubNub by producerServer for Consumer to consumePubNub
-	private static final String TASK_QUEUE_NAME = "to-alerts";
-  private static final String RMQ_HOST = "54.152.57.57";
-  private static final int RMQ_PORT = 5672;
-  private static final String RMQ_USER = "user";
-  private static final String RMQ_PASWD = "Abcd@1234";
-    
+	private static String TASK_QUEUE_NAME = "to-alerts";
+  private static String RMQ_HOST = "54.152.57.57";
+  private static int RMQ_PORT = 5672;
+  private static String RMQ_USER = "user";
+  private static String RMQ_PASWD = "Abcd@1234";
+  
+  private static void loadEnvironment() {
+    if (System.getenv("TASK_QUEUE_NAME") != null) {
+      TASK_QUEUE_NAME = System.getenv("TASK_QUEUE_NAME");
+    }
+    if (System.getenv("RMQ_HOST") != null) {
+      RMQ_HOST = System.getenv("RMQ_HOST");
+    }
+    if (System.getenv("RMQ_PORT") != null) {
+      RMQ_PORT = Integer.valueOf(System.getenv("RMQ_PORT"));
+    }
+    if (System.getenv("RMQ_USER") != null) {
+      RMQ_USER = System.getenv("RMQ_USER");
+    }
+    if (System.getenv("RMQ_PASWD") != null) {
+      RMQ_PASWD = System.getenv("RMQ_PASWD");
+    }
+  }
     public static void main(String[] argv) throws Exception {
-    	
+        loadEnvironment();
+        System.out.println("Environment variables loaded");
+        System.out.println("TASK_QUEUE_NAME: " + TASK_QUEUE_NAME);
+        System.out.println("RMQ_HOST: " + RMQ_HOST);
+        System.out.println("RMQ_PORT: " + Integer.toString(RMQ_PORT));
+        System.out.println("RMQ_USER: " + RMQ_USER);
+        System.out.println("RMQ_PASWD: " + RMQ_PASWD);
+        
         ConnectionFactory factory = new ConnectionFactory();
         factory.setUsername(RMQ_USER);
         factory.setPassword(RMQ_PASWD);
